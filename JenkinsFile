@@ -1,3 +1,5 @@
+def gv
+
 pipeline {
     agent any
 
@@ -7,9 +9,14 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git 'https://github.com/MAHossain1/java-graven-app.git'
-            }
+           steps {
+                    script {
+                        checkout scmGit(
+                            branches: [[name: '*/main']], // Change if needed
+                            userRemoteConfigs: [[url: 'https://github.com/MAHossain1/java-graven-app.git']]
+                        )
+                    }
+                }
         }
 
         stage('Build jar') {
