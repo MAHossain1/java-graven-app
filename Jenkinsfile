@@ -3,9 +3,9 @@ def gv
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'
-    }
+    // tools {
+    //     maven 'Maven'
+    // }
 
     stages {
         stage('Checkout') {
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     echo "building the application"
-                    sh 'mvn package'
+                    // sh 'mvn package'
                 }
             }
         }
