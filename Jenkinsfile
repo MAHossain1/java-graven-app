@@ -20,18 +20,14 @@ pipeline {
         }
 
         stage('Build jar') {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
-                }
-            }
             steps {
-                 script {
+                script {
                     echo "building the application"
                     // sh 'mvn package'
                 }
             }
         }
+
         stage('Building the docker image') {
             steps {
                 script {
@@ -44,15 +40,18 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 script {
-                    echo "deploying the application"
+                    def dockerCmd = 'docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
+                    sshagent(['ec2-server-key']) {
+                        sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
+                    }
                 }
             }
-        }
         
+        }
     }
 
-    
 }
