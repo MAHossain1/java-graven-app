@@ -69,7 +69,8 @@ pipeline {
                 message "Do you want to deploy the application?"
                 ok "Yes"
                 parameters {
-                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
+                    choice(name: 'ONE', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
+                     choice(name: 'TWO', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
                 }
             }    
 
@@ -82,6 +83,8 @@ pipeline {
                     // sshagent(['ec2-server-key']) {
                     //     sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
                     // }
+                    echo "deploying to ${ONE}"
+                     echo "deploying to ${TWO}"
                 }
             }
         
