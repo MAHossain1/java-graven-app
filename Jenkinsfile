@@ -3,9 +3,9 @@ def gv
 pipeline {
     agent any
 
-    // tools {
-    //     maven 'Maven'
-    // }
+    tools {
+        maven 'Maven'
+    }
 
     stages {
         stage('Checkout') {
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     echo "building the application"
-                    // sh 'mvn package'
+                    sh 'mvn package'
                 }
             }
         }
@@ -32,11 +32,11 @@ pipeline {
             steps {
                 script {
                     echo "building the docker image"
-                    // withCredentials([usernamePassword(credentialsId: 'docker_hub_repo', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    //     sh 'docker build -t  arman04/java-maven-app:jma-2.0 .'
-                    //     sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
-                    //     sh 'docker push arman04/java-maven-app:jma-2.0'
-                    // }
+                    withCredentials([usernamePassword(credentialsId: 'my-dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh 'docker build -t  arman04/java-maven-app:jma-3.0 .'
+                        sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
+                        sh 'docker push arman04/java-maven-app:jma-3.0'
+                    }
                 }
             }
         }
@@ -44,14 +44,23 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def dockerCmd = 'sudo docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
-                    sshagent(['ec2-server-key']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
-                    }
+                    echo 'deploying the application...'
+                    
                 }
-            }
-        
+            }    
         }
+
+        // stage('Deploy') {
+        //     steps {
+        //         script {
+        //             def dockerCmd = 'sudo docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
+        //             sshagent(['ec2-server-key']) {
+        //                 sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
+        //             }
+        //         }
+        //     }
+        
+        // }
     }
 
 }
