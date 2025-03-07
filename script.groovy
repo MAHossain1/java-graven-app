@@ -17,7 +17,7 @@ def buildImage() {
 }      
 
 def deployApp() {
-       echo "building the docker image"
+       echo "building the docker image ${params.VERSION}"
     //    withCredentials([usernamePassword(credentialsId: 'my-dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
     //         sh 'docker build -t  arman04/java-maven-app:jma-3.0 .'
     //         sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
