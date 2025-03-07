@@ -8,16 +8,16 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-           steps {
-                    script {
-                        checkout scmGit(
-                            branches: [[name: '*/main']], // Change if needed
-                            userRemoteConfigs: [[url: 'https://github.com/MAHossain1/java-graven-app.git']]
-                        )
-                    }
-                }
-        }
+        // stage('Checkout') {
+        //    steps {
+        //             script {
+        //                 checkout scmGit(
+        //                     branches: [[name: '*/main']], // Change if needed
+        //                     userRemoteConfigs: [[url: 'https://github.com/MAHossain1/java-graven-app.git']]
+        //                 )
+        //             }
+        //         }
+        // }
 
         stage('Build jar') {
             steps {
