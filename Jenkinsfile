@@ -7,23 +7,32 @@ pipeline {
         maven 'Maven'
     }
 
-    stages {
-        // stage('Checkout') {
-        //    steps {
-        //             script {
-        //                 checkout scmGit(
-        //                     branches: [[name: '*/main']], // Change if needed
-        //                     userRemoteConfigs: [[url: 'https://github.com/MAHossain1/java-graven-app.git']]
-        //                 )
-        //             }
-        //         }
-        // }
+    parameters {
+        // string(name: 'VERSION', defaultValue: '', description: 'Version of the application')
+        choice(name: 'VERSION', choices: ['1.1.0', '1.1.1', '2.1.0'], description: 'Environment to deploy the application')
+        booleanParam(name: 'executeTests', defaultValue: true, description: 'Run tests?')
+    }
 
+    stages {
+       
         stage('Build jar') {
             steps {
                 script {
                     echo "building the application"
                     // sh 'mvn package'
+                }
+            }
+        }
+
+        stage('Test the application') {
+            when {
+                expression {
+                    params.executeTests
+                }
+            }
+            steps {
+                script {
+                    echo 'running the tests...'
                 }
             }
         }
