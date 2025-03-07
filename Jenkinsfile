@@ -65,26 +65,27 @@ pipeline {
       
 
         stage('Deploy') {
-            input {
-                message "Do you want to deploy the application?"
-                ok "Yes"
-                parameters {
-                    choice(name: 'ONE', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
-                     choice(name: 'TWO', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
-                }
-            }    
+            // input {
+            //     message "Do you want to deploy the application?"
+            //     ok "Yes"
+            //     parameters {
+            //         choice(name: 'ONE', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
+            //          choice(name: 'TWO', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')
+            //     }
+            // }    
 
 
             steps {
                 script {
+                    env.ENV = input message: 'select the environment to deploy the application', parameters: [choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: 'Environment to deploy the application')]
                     gv.deployApp()
                     // echo "Deploying the version ${params.VERSION}"
                     // def dockerCmd = 'sudo docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
                     // sshagent(['ec2-server-key']) {
                     //     sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
                     // }
-                    echo "deploying to ${ONE}"
-                     echo "deploying to ${TWO}"
+                    echo "deploying to ${ENV}"
+                    //  echo "deploying to ${TWO}"
                 }
             }
         
