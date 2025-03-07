@@ -14,17 +14,16 @@ pipeline {
     }
 
     stages {
-       
-        stage('Build jar') {
+
+        stage('init') {
             steps {
                 script {
-                    echo "building the application"
-                    // sh 'mvn package'
+                    gv = load 'script.groovy'
                 }
             }
         }
 
-        stage('Test the application') {
+          stage('Test the application') {
             when {
                 expression {
                     params.executeTests
@@ -32,15 +31,28 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'running the tests...'
+                    gv.testApp()
+                }
+            }
+        }
+       
+        stage('Build jar') {
+            steps {
+                script {
+                    gv.buildJar()
+                    // echo "building the application"
+                    // sh 'mvn package'
                 }
             }
         }
 
+      
+
         stage('Building the docker image') {
             steps {
                 script {
-                    echo "building the docker image"
+                    gv.buildJar()
+                    // echo "building the docker image"
                     // withCredentials([usernamePassword(credentialsId: 'my-dockerhub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     //     sh 'docker build -t  arman04/java-maven-app:jma-3.0 .'
                     //     sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
@@ -50,27 +62,21 @@ pipeline {
             }
         }
 
+      
+
         stage('Deploy') {
             steps {
                 script {
-                    echo 'deploying the application...'
-                    echo "Deploying the version ${params.VERSION}"
-                    
+                    gv.deployApp()
+                    // echo "Deploying the version ${params.VERSION}"
+                    // def dockerCmd = 'sudo docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
+                    // sshagent(['ec2-server-key']) {
+                    //     sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
+                    // }
                 }
-            }    
-        }
-
-        // stage('Deploy') {
-        //     steps {
-        //         script {
-        //             def dockerCmd = 'sudo docker run -p 3080:3080 arman04/java-maven-app:jma-2.0'
-        //             sshagent(['ec2-server-key']) {
-        //                 sh "ssh -o StrictHostKeyChecking=no ec2-user@35.154.210.161 ${dockerCmd}"
-        //             }
-        //         }
-        //     }
+            }
         
-        // }
+        }
     }
 
 }
